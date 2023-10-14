@@ -1,0 +1,28 @@
+server:
+  port: 8080 # 项目对外暴漏的访问端口号
+
+spring:
+  application:
+    name: cli # 项目名称
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher # 支持ANT样式的路径模式， 具有递归通配符的路径样式 例如：/user/**
+  datasource:
+    url: jdbc:mysql://localhost:3306/cli?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password:
+  redis:
+    host: localhost # Redis服务器地址
+    database: 0 # Redis数据库索引（默认为0）
+    port: 6379 # Redis服务器连接端口
+    password: admin # Redis服务器连接密码（默认为空）
+    timeout: 3000ms # 连接超时时间（毫秒）
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml # 指向 /resources/mapper下的  mapper.xml 文件
+  global-config:
+    db-config:
+      id-type: auto   # 主键生成策略 自动增长
+  configuration:
+    auto-mapping-behavior: partial # java实体类属性和数据库字段是否自动映射  partial作用：对手动映射指定的字段之外的字段进行自动映射
+    map-underscore-to-camel-case: true # java实体类属性的驼峰命名规则转换为数据库字段的下划线命名规则 true作用：开启
