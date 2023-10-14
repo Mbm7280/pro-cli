@@ -1,4 +1,6 @@
-package com.echo.config;
+package com.echo.config.api;
+
+import javax.annotation.PostConstruct;
 
 public enum ResultCode implements IErrorCode {
 

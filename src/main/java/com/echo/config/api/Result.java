@@ -1,4 +1,4 @@
-package com.echo.config;
+package com.echo.config.api;
 
 
 import lombok.AllArgsConstructor;

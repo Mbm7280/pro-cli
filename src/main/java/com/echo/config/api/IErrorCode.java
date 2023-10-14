@@ -1,4 +1,4 @@
-package com.echo.config;
+package com.echo.config.api;
 
 /****************************************************
  * 创建人：Echo
