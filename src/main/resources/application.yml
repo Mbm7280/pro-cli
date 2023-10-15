@@ -5,7 +5,7 @@ spring:
   application:
     name: cli # 项目名称
   mvc:
-    pathmatch:
+    pathmatch: # 解决swagger3在新版本Springboot中无法展示的问题
       matching-strategy: ant_path_matcher # 支持ANT样式的路径模式， 具有递归通配符的路径样式 例如：/user/**
   datasource:
     url: jdbc:mysql://localhost:3306/cli?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false

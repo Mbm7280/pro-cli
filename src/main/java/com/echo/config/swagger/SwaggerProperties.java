@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  * 创建时间: 2023/8/13 06:39
  * 项目名称: {EBlog}
  * 文件名称: SwaggerProperties
- * 文件描述: [Description]: Swagger自定义配置
+ * 文件描述: [Swagger配置信息类]
  * version：1.0
  * All rights Reserved, Designed By ECHO
  *

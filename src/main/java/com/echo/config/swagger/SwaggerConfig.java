@@ -14,10 +14,16 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Swagger API文档相关配置
- * Created by macro on 2018/4/26.
- */
+/****************************************************
+ * 创建人：Echo
+ * 创建时间: 2023/10/15 15:20
+ * 项目名称: {cli}
+ * 文件名称: SwaggerConfig
+ * 文件描述: [Swagger相关配置]
+ * version：1.0
+ * All rights Reserved, Designed By Echo
+ *
+ ********************************************************/
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig extends BaseSwaggerConfig {
@@ -25,10 +31,10 @@ public class SwaggerConfig extends BaseSwaggerConfig {
     @Override
     public SwaggerProperties swaggerProperties() {
         return SwaggerProperties.builder()
-                .apiBasePackage("com.echo.blog.modules")
-                .title("mall-tiny项目骨架")
-                .description("mall-tiny项目骨架相关接口文档")
-                .contactName("macro")
+                .apiBasePackage("com.echo.modules")
+                .title("cli项目骨架")
+                .description("cli项目骨架相关接口文档")
+                .contactName("echo")
                 .version("1.0")
                 .enableSecurity(true)
                 .build();
