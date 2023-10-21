@@ -73,6 +73,10 @@ public class Result<T> {
         return new Result<T>(ResultCode.FAILED.getCode(), ResultCode.FAILED.getMessage(), null);
     }
 
+    public static <T> Result<T> failed(String message) {
+        return new Result<T>(ResultCode.FAILED.getCode(), message, null);
+    }
+
     /**
      * 失败返回结果(自定义Error信息)
      *

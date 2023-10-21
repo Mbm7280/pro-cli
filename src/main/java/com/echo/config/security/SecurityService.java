@@ -1,6 +1,5 @@
 package com.echo.config.security;
 
-import com.echo.modules.user.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
