@@ -30,7 +30,7 @@ public abstract class BaseSwaggerConfig {
     @Bean
     public Docket createRestApi() {
         SwaggerProperties swaggerProperties = swaggerProperties();
-        Docket docket = new Docket(DocumentationType.OAS_30)
+        Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo(swaggerProperties))
                 .enable(true) //配置是否启用Swagger，如果是false，在浏览器将无法访问
                 .select() // 配置扫描接口,RequestHandlerSelectors配置如何扫描接口

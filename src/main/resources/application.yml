@@ -44,8 +44,8 @@ secure:
       - /favicon.ico
       - /actuator/**
       - /druid/**
-      - /admin/login
-      - /admin/register
+      - /umsUser/login
+      - /umsUser/register
       - /admin/info
       - /admin/logout
 

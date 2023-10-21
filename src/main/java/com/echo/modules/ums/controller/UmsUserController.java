@@ -1,11 +1,13 @@
 package com.echo.modules.ums.controller;
 
 
+import cn.hutool.core.collection.CollUtil;
 import com.echo.config.api.Result;
 import com.echo.modules.ums.dto.req.LoginReqDTO;
 import com.echo.modules.ums.dto.req.RegisterReqDTO;
 import com.echo.modules.ums.dto.res.LoginResDTO;
 import com.echo.modules.ums.dto.res.RefreshTokenResDTO;
+import com.echo.modules.ums.model.UmsRole;
 import com.echo.modules.ums.model.UmsUser;
 import com.echo.modules.ums.service.UmsUserService;
 import io.swagger.annotations.Api;
@@ -18,6 +20,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -28,7 +35,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author Echo
  * @since 2023-10-21
  */
-@RestController("/ums/umsUser")
+@RestController()
+@RequestMapping("/umsUser")
 @Api(tags = "UmsUserController")
 @Tag(name = "UmsUserController", description = "用户管理")
 public class UmsUserController {
@@ -60,7 +68,6 @@ public class UmsUserController {
     public Result<RefreshTokenResDTO> refreshToken(HttpServletRequest request) {
         return userService.refreshToken(request);
     }
-
 
 }
 

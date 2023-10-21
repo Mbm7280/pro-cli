@@ -28,4 +28,15 @@ public interface UmsUserCacheService {
      */
     void setResourceList(Long adminId, List<UmsResource> resourceList);
 
+    /**
+     * 当角色相关资源信息改变时删除相关后台用户缓存
+     */
+    void delResourceListByRole(Long roleId);
+
+    /**
+     * 当角色相关资源信息改变时删除相关后台用户缓存
+     */
+    void delResourceListByRoleIds(List<Long> roleIds);
+
+
 }
