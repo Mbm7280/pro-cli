@@ -1,5 +1,5 @@
 server:
-  port: 8081 # 项目对外暴漏的访问端口号
+  port: 8080 # 项目对外暴漏的访问端口号
 
 spring:
   application:
