@@ -5,7 +5,7 @@ import com.echo.modules.ums.model.UmsUser;
 
 import java.util.List;
 
-public interface UmsAdminCacheService {
+public interface UmsUserCacheService {
 
     /**
      * 获取缓存后台用户信息

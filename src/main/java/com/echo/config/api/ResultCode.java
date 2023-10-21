@@ -19,6 +19,8 @@ public enum ResultCode implements IErrorCode {
     RETURN_VALUE_IS_NULL(990, "返回值为空，请稍后重试"),
 
 
+    THE_USER_HAS_REGISTERED(1001,"该用户已注册！")
+
     ;
 
     private long code;

@@ -1,9 +1,24 @@
 package com.echo.modules.ums.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.echo.config.api.Result;
+import com.echo.modules.ums.dto.req.LoginReqDTO;
+import com.echo.modules.ums.dto.req.RegisterReqDTO;
+import com.echo.modules.ums.dto.res.LoginResDTO;
+import com.echo.modules.ums.dto.res.RefreshTokenResDTO;
+import com.echo.modules.ums.model.UmsUser;
+import com.echo.modules.ums.service.UmsUserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * <p>
@@ -13,9 +28,39 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Echo
  * @since 2023-10-21
  */
-@RestController
-@RequestMapping("/ums/umsUser")
+@RestController("/ums/umsUser")
+@Api(tags = "UmsUserController")
+@Tag(name = "UmsUserController", description = "用户管理")
 public class UmsUserController {
+
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
+
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
+
+    @Autowired
+    private UmsUserService userService;
+
+    @ApiOperation(value = "用户注册")
+    @PostMapping(value = "/register")
+    public Result<UmsUser> register(@Validated @RequestBody RegisterReqDTO registerReqDTO) {
+        return userService.register(registerReqDTO);
+    }
+
+    @ApiOperation(value = "登录")
+    @PostMapping(value = "/login")
+    public Result<LoginResDTO> login(@Validated @RequestBody LoginReqDTO loginReqDTO) {
+        return userService.login(loginReqDTO);
+    }
+
+
+    @ApiOperation(value = "刷新token")
+    @GetMapping(value = "/refreshToken")
+    public Result<RefreshTokenResDTO> refreshToken(HttpServletRequest request) {
+        return userService.refreshToken(request);
+    }
+
 
 }
 

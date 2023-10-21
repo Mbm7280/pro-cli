@@ -3,7 +3,7 @@ package com.echo.modules.ums.service.impl;
 import com.echo.common.RedisService;
 import com.echo.modules.ums.model.UmsResource;
 import com.echo.modules.ums.model.UmsUser;
-import com.echo.modules.ums.service.UmsAdminCacheService;
+import com.echo.modules.ums.service.UmsUserCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
+public class UmsUserCacheServiceImpl implements UmsUserCacheService {
 
     @Value("${redis.database}")
     private String REDIS_DATABASE;
