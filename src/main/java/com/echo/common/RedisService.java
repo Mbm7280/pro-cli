@@ -9,7 +9,7 @@ import java.util.Set;
  * 创建时间: 2023/10/21 14:43
  * 项目名称: {cli}
  * 文件名称: RedisService
- * 文件描述: [redis操作Service]
+ * 文件描述: [redisService]
  * version：1.0
  * All rights Reserved, Designed By Echo
  *
