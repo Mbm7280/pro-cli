@@ -16,4 +16,14 @@
         <result column="status" property="status" />
     </resultMap>
 
+
+    <select id="getUserIdList" resultType="java.lang.Long">
+        SELECT
+            DISTINCT ur.user_id
+        FROM
+            ums_role_resource_relation rr
+                LEFT JOIN ums_user_role_relation ur ON rr.role_id = ur.role_id
+        WHERE rr.resource_id=#{resourceId}
+    </select>
+
 </mapper>

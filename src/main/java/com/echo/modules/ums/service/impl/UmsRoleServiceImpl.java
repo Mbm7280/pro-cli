@@ -1,11 +1,15 @@
 package com.echo.modules.ums.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.echo.config.api.Result;
+import com.echo.modules.ums.mapper.UmsMenuMapper;
+import com.echo.modules.ums.mapper.UmsResourceMapper;
 import com.echo.modules.ums.model.UmsMenu;
+import com.echo.modules.ums.model.UmsResource;
 import com.echo.modules.ums.model.UmsRole;
 import com.echo.modules.ums.mapper.UmsRoleMapper;
 import com.echo.modules.ums.model.UmsRoleResourceRelation;
@@ -22,6 +26,8 @@ import java.util.Date;
 import java.util.List;
 
 import static com.echo.common.constant.CommonConstant.ONE;
+import static com.echo.config.api.ResultCode.THE_MENU_QUERY_FAILED;
+import static com.echo.config.api.ResultCode.THE_RESOURCE_QUERY_FAILED;
 
 /**
  * <p>
@@ -36,6 +42,12 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
 
     @Autowired
     private UmsRoleMapper umsRoleMapper;
+
+    @Autowired
+    private UmsMenuMapper menuMapper;
+
+    @Autowired
+    private UmsResourceMapper resourceMapper;
 
     @Autowired
     private UmsUserCacheService userCacheService;
@@ -135,9 +147,64 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
         return Result.success();
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsRoleServiceImpl
+     * 方法名称：getMenuListByAdminId
+     * 方法描述：{ 根据管理员ID获取对应菜单 }
+     * param：[adminId]
+     * return：com.echo.config.api.Result<java.util.List<com.echo.modules.ums.model.UmsMenu>>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/22 16:55
+     * version：1.0
+     */
     @Override
-    public List<UmsMenu> getMenuList(Long adminId) {
-        return null;
+    public Result<List<UmsMenu>> getMenuListByAdminId(Long adminId) {
+        List<UmsMenu> menuList = menuMapper.getMenuListByAdminId(adminId);
+        if (CollectionUtil.isEmpty(menuList)) {
+            return Result.failed(THE_MENU_QUERY_FAILED);
+        }
+        return Result.success(menuList);
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsRoleServiceImpl
+     * 方法名称：getMenusByRoleId
+     * 方法描述：{ 获取角色相关菜单 }
+     * param：[roleId]
+     * return：com.echo.config.api.Result<java.util.List<com.echo.modules.ums.model.UmsMenu>>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/22 16:51
+     * version：1.0
+     */
+    @Override
+    public Result<List<UmsMenu>> getMenusByRoleId(Long roleId) {
+        List<UmsMenu> menuList = menuMapper.getMenusByRoleId(roleId);
+        if (CollectionUtil.isEmpty(menuList)) {
+            return Result.failed(THE_MENU_QUERY_FAILED);
+        }
+        return Result.success(menuList);
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsRoleServiceImpl
+     * 方法名称：getResourcesByRoleId
+     * 方法描述：{ 获取角色相关资源 }
+     * param：[roleId]
+     * return：com.echo.config.api.Result<java.util.List<com.echo.modules.ums.model.UmsResource>>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/22 16:46
+     * version：1.0
+     */
+    @Override
+    public Result<List<UmsResource>> getResourcesByRoleId(Long roleId) {
+        List<UmsResource> resourceList = resourceMapper.getResourcesByRoleId(roleId);
+        if (CollectionUtil.isEmpty(resourceList)) {
+            return Result.failed(THE_RESOURCE_QUERY_FAILED);
+        }
+        return Result.success(resourceList);
     }
 
 }

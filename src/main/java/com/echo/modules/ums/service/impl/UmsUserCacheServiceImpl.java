@@ -3,6 +3,7 @@ package com.echo.modules.ums.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.echo.common.RedisService;
+import com.echo.modules.ums.mapper.UmsUserMapper;
 import com.echo.modules.ums.model.UmsResource;
 import com.echo.modules.ums.model.UmsUser;
 import com.echo.modules.ums.model.UmsUserRoleRelation;
@@ -32,6 +33,9 @@ public class UmsUserCacheServiceImpl implements UmsUserCacheService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private UmsUserMapper userMapper;
 
 
     @Autowired
@@ -65,7 +69,7 @@ public class UmsUserCacheServiceImpl implements UmsUserCacheService {
     @Override
     public void delResourceListByRole(Long roleId) {
         QueryWrapper<UmsUserRoleRelation> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(UmsUserRoleRelation::getRoleId,roleId);
+        wrapper.lambda().eq(UmsUserRoleRelation::getRoleId, roleId);
         List<UmsUserRoleRelation> relationList = userRoleRelationService.list(wrapper);
         if (CollUtil.isNotEmpty(relationList)) {
             String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
@@ -77,11 +81,21 @@ public class UmsUserCacheServiceImpl implements UmsUserCacheService {
     @Override
     public void delResourceListByRoleIds(List<Long> roleIds) {
         QueryWrapper<UmsUserRoleRelation> wrapper = new QueryWrapper<>();
-        wrapper.lambda().in(UmsUserRoleRelation::getRoleId,roleIds);
+        wrapper.lambda().in(UmsUserRoleRelation::getRoleId, roleIds);
         List<UmsUserRoleRelation> relationList = userRoleRelationService.list(wrapper);
         if (CollUtil.isNotEmpty(relationList)) {
             String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
             List<String> keys = relationList.stream().map(relation -> keyPrefix + relation.getAdminId()).collect(Collectors.toList());
+            redisService.del(keys);
+        }
+    }
+
+    @Override
+    public void delResourceListByResource(Long resourceId) {
+        List<Long> userIdList = userMapper.getUserIdList(resourceId);
+        if (CollUtil.isNotEmpty(userIdList)) {
+            String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
+            List<String> keys = userIdList.stream().map(adminId -> keyPrefix + adminId).collect(Collectors.toList());
             redisService.del(keys);
         }
     }

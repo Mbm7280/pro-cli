@@ -19,9 +19,22 @@ public enum ResultCode implements IErrorCode {
     RETURN_VALUE_IS_NULL(990, "返回值为空，请稍后重试"),
 
 
-    THE_USER_HAS_REGISTERED(1001,"该用户已注册！")
+    THE_USER_HAS_REGISTERED(1001, "该用户已注册！"),
 
-    ;
+
+    THE_RESOURCE_CATEGORY_QUERY_FAILED(1002, "获取所有资源分类失败，请稍后重试！"),
+
+    THE_RESOURCE_CATEGORY_ADD_FAILED(1003, "添加资源分类失败，请稍后重试！"),
+
+
+    THE_RESOURCE_ADD_FAILED(1004, "添加资源失败，请稍后重试！"),
+
+    THE_RESOURCE_DEL_FAILED(1005, "删除资源失败，请稍后重试！"),
+
+    THE_RESOURCE_QUERY_FAILED(1006, "查询资源失败，请稍后重试！"),
+
+
+    THE_MENU_QUERY_FAILED(1007, "查询菜单失败，请稍后重试！");
 
     private long code;
     private String message;
