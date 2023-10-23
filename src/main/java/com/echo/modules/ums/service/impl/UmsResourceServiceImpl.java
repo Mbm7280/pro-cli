@@ -35,7 +35,7 @@ public class UmsResourceServiceImpl extends ServiceImpl<UmsResourceMapper, UmsRe
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsResourceServiceImpl
-     * 方法名称：createResource
+     * 方法名称：addResource
      * 方法描述：{ 添加资源 }
      * param：[umsResource]
      * return：com.echo.config.api.Result
@@ -44,7 +44,7 @@ public class UmsResourceServiceImpl extends ServiceImpl<UmsResourceMapper, UmsRe
      * version：1.0
      */
     @Override
-    public Result createResource(UmsResource umsResource) {
+    public Result addResource(UmsResource umsResource) {
         umsResource.setCreateTime(new Date());
         return save(umsResource) ? Result.success() : Result.failed(THE_RESOURCE_ADD_FAILED);
     }
@@ -52,7 +52,7 @@ public class UmsResourceServiceImpl extends ServiceImpl<UmsResourceMapper, UmsRe
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsResourceServiceImpl
-     * 方法名称：updateResource
+     * 方法名称：updateResourceById
      * 方法描述：{ 修改资源 }
      * param：[id, umsResource]
      * return：com.echo.config.api.Result
@@ -61,7 +61,7 @@ public class UmsResourceServiceImpl extends ServiceImpl<UmsResourceMapper, UmsRe
      * version：1.0
      */
     @Override
-    public Result updateResource(Long id, UmsResource umsResource) {
+    public Result updateResourceById(Long id, UmsResource umsResource) {
         umsResource.setId(id);
         boolean success = updateById(umsResource);
         if (success) {
@@ -73,7 +73,7 @@ public class UmsResourceServiceImpl extends ServiceImpl<UmsResourceMapper, UmsRe
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsResourceServiceImpl
-     * 方法名称：delResource
+     * 方法名称：delResourceById
      * 方法描述：{ 删除资源 }
      * param：[id]
      * return：com.echo.config.api.Result
@@ -82,7 +82,7 @@ public class UmsResourceServiceImpl extends ServiceImpl<UmsResourceMapper, UmsRe
      * version：1.0
      */
     @Override
-    public Result delResource(Long id) {
+    public Result delResourceById(Long id) {
         boolean success = removeById(id);
         if (success) {
             userCacheService.delResourceListByResource(id);

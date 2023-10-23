@@ -17,17 +17,17 @@ public interface UmsResourceService extends IService<UmsResource> {
     /**
      * 添加资源
      */
-    Result createResource(UmsResource umsResource);
+    Result addResource(UmsResource umsResource);
 
     /**
      * 修改资源
      */
-    Result updateResource(Long id, UmsResource umsResource);
+    Result updateResourceById(Long id, UmsResource umsResource);
 
     /**
      * 删除资源
      */
-    Result delResource(Long id);
+    Result delResourceById(Long id);
 
     /**
      * 分页查询资源
