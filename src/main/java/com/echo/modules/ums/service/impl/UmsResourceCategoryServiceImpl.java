@@ -51,7 +51,7 @@ public class UmsResourceCategoryServiceImpl extends ServiceImpl<UmsResourceCateg
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsResourceCategoryServiceImpl
-     * 方法名称：createResourceCategory
+     * 方法名称：addResourceCategory
      * 方法描述：{ 创建资源分类 }
      * param：[umsResourceCategory]
      * return：com.echo.config.api.Result
@@ -60,7 +60,7 @@ public class UmsResourceCategoryServiceImpl extends ServiceImpl<UmsResourceCateg
      * version：1.0
      */
     @Override
-    public Result createResourceCategory(UmsResourceCategory umsResourceCategory) {
+    public Result addResourceCategory(UmsResourceCategory umsResourceCategory) {
         umsResourceCategory.setCreateTime(new Date());
         return save(umsResourceCategory) ? Result.success() : Result.failed(THE_RESOURCE_CATEGORY_ADD_FAILED);
     }

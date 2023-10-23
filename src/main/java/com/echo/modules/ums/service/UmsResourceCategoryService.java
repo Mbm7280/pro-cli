@@ -25,6 +25,6 @@ public interface UmsResourceCategoryService extends IService<UmsResourceCategory
     /**
      * 创建资源分类
      */
-    Result createResourceCategory(UmsResourceCategory umsResourceCategory);
+    Result addResourceCategory(UmsResourceCategory umsResourceCategory);
 
 }
