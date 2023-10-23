@@ -34,7 +34,10 @@ public enum ResultCode implements IErrorCode {
     THE_RESOURCE_QUERY_FAILED(1006, "查询资源失败，请稍后重试！"),
 
 
-    THE_MENU_QUERY_FAILED(1007, "查询菜单失败，请稍后重试！");
+    THE_MENU_QUERY_FAILED(1007, "查询菜单失败，请稍后重试！"),
+
+
+    ;
 
     private long code;
     private String message;
