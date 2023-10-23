@@ -34,7 +34,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsMenuServiceImpl
-     * 方法名称：create
+     * 方法名称：createMenu
      * 方法描述：{ 创建菜单 }
      * param：[umsMenu]
      * return：com.echo.config.api.Result<java.lang.Object>
@@ -43,7 +43,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      * version：1.0
      */
     @Override
-    public Result create(UmsMenu umsMenu) {
+    public Result createMenu(UmsMenu umsMenu) {
         umsMenu.setCreateTime(new Date());
         updateLevel(umsMenu);
         return save(umsMenu) ? Result.success() : Result.failed();
@@ -52,7 +52,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsMenuServiceImpl
-     * 方法名称：update
+     * 方法名称：updateMenu
      * 方法描述：{ 修改菜单 }
      * param：[id, umsMenu]
      * return：com.echo.config.api.Result
@@ -61,7 +61,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      * version：1.0
      */
     @Override
-    public Result update(Long id, UmsMenu umsMenu) {
+    public Result updateMenu(Long id, UmsMenu umsMenu) {
         umsMenu.setId(id);
         updateLevel(umsMenu);
         return updateById(umsMenu) ? Result.success() : Result.failed();
@@ -110,7 +110,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsMenuServiceImpl
-     * 方法名称：updateHidden
+     * 方法名称：updateMenuHidden
      * 方法描述：{ 修改菜单显示状态 }
      * param：[id, hidden]
      * return：com.echo.config.api.Result
@@ -119,7 +119,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      * version：1.0
      */
     @Override
-    public Result updateHidden(Long id, Integer hidden) {
+    public Result updateMenuHidden(Long id, Integer hidden) {
         UmsMenu umsMenu = new UmsMenu();
         umsMenu.setId(id);
         umsMenu.setHidden(hidden);

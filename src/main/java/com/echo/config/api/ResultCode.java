@@ -36,6 +36,8 @@ public enum ResultCode implements IErrorCode {
 
     THE_MENU_QUERY_FAILED(1007, "查询菜单失败，请稍后重试！"),
 
+    THE_MENU_DELETE_FAILED(1008, "删除菜单失败，请稍后重试！"),
+
 
     ;
 
