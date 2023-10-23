@@ -38,6 +38,10 @@ public enum ResultCode implements IErrorCode {
 
     THE_MENU_DELETE_FAILED(1008, "删除菜单失败，请稍后重试！"),
 
+    THE_ROLE_QUERY_FAILED(1009, "查询角色失败，请稍后重试！"),
+
+    THE_ROLE_UPDATE_FAILED(1010, "更新角色失败，请稍后重试！"),
+
 
     ;
 

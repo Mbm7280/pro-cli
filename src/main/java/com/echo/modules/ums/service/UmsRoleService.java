@@ -59,4 +59,13 @@ public interface UmsRoleService extends IService<UmsRole> {
     Result allocResource(Long roleId, List<Long> resourceIds);
 
 
+    /**
+     * 修改角色状态
+     *
+     * @param id
+     * @param status
+     * @return
+     */
+    Result updateRoleStatus(Long id, Integer status);
+
 }

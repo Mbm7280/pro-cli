@@ -26,8 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.echo.common.constant.CommonConstant.ONE;
-import static com.echo.config.api.ResultCode.THE_MENU_QUERY_FAILED;
-import static com.echo.config.api.ResultCode.THE_RESOURCE_QUERY_FAILED;
+import static com.echo.config.api.ResultCode.*;
 
 /**
  * <p>
@@ -145,6 +144,14 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
         roleResourceRelationService.saveBatch(relationList);
         userCacheService.delResourceListByRole(roleId);
         return Result.success();
+    }
+
+    @Override
+    public Result updateRoleStatus(Long id, Integer status) {
+        UmsRole umsRole = new UmsRole();
+        umsRole.setId(id);
+        umsRole.setStatus(status);
+        return updateById(umsRole) ? Result.success() : Result.failed(THE_ROLE_UPDATE_FAILED);
     }
 
     /**
