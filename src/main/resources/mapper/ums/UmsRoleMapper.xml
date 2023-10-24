@@ -12,4 +12,10 @@
         <result column="status" property="status" />
     </resultMap>
 
+    <select id="getRoleListByUserId" resultType="com.echo.modules.ums.model.UmsRole">
+        select r.*
+        from ums_user_role_relation ar left join ums_role r on ar.role_id = r.id
+        where ar.user_id = #{userId}
+    </select>
+
 </mapper>

@@ -9,6 +9,7 @@ import com.echo.modules.ums.model.UmsUser;
 import com.echo.modules.ums.model.UmsUserRoleRelation;
 import com.echo.modules.ums.service.UmsUserCacheService;
 import com.echo.modules.ums.service.UmsUserRoleRelationService;
+import com.echo.modules.ums.service.UmsUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,18 @@ public class UmsUserCacheServiceImpl implements UmsUserCacheService {
 
     @Autowired
     private UmsUserRoleRelationService userRoleRelationService;
+
+    @Autowired
+    private UmsUserService userService;
+
+    @Override
+    public void delAdmin(Long adminId) {
+        UmsUser admin = userService.getById(adminId);
+        if (admin != null) {
+            String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + admin.getUsername();
+            redisService.del(key);
+        }
+    }
 
     @Override
     public UmsUser getAdmin(String username) {
@@ -98,6 +111,12 @@ public class UmsUserCacheServiceImpl implements UmsUserCacheService {
             List<String> keys = userIdList.stream().map(adminId -> keyPrefix + adminId).collect(Collectors.toList());
             redisService.del(keys);
         }
+    }
+
+    @Override
+    public void delResourceList(Long adminId) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        redisService.del(key);
     }
 
 }
