@@ -92,5 +92,11 @@ public class UmsRoleController {
         return roleService.allocResource(roleId, resourceIds);
     }
 
+    @ApiOperation("给角色分配菜单")
+    @PostMapping(value = "/allocMenu")
+    public Result allocMenu(@RequestParam Long roleId, @RequestParam List<Long> menuIds) {
+        return roleService.allocMenu(roleId, menuIds);
+    }
+
 }
 

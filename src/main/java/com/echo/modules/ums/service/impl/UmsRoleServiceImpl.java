@@ -8,11 +8,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.echo.config.api.Result;
 import com.echo.modules.ums.mapper.UmsMenuMapper;
 import com.echo.modules.ums.mapper.UmsResourceMapper;
-import com.echo.modules.ums.model.UmsMenu;
-import com.echo.modules.ums.model.UmsResource;
-import com.echo.modules.ums.model.UmsRole;
+import com.echo.modules.ums.model.*;
 import com.echo.modules.ums.mapper.UmsRoleMapper;
-import com.echo.modules.ums.model.UmsRoleResourceRelation;
 import com.echo.modules.ums.service.UmsRoleMenuRelationService;
 import com.echo.modules.ums.service.UmsRoleResourceRelationService;
 import com.echo.modules.ums.service.UmsRoleService;
@@ -26,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static com.echo.common.constant.CommonConstant.ONE;
+import static com.echo.common.constant.CommonConstant.ZERO;
 import static com.echo.config.api.ResultCode.*;
 
 /**
@@ -144,6 +142,35 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
         roleResourceRelationService.saveBatch(relationList);
         userCacheService.delResourceListByRole(roleId);
         return Result.success();
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsRoleServiceImpl
+     * 方法名称：allocMenu
+     * 方法描述：{ 给角色分配菜单 }
+     * param：[roleId, menuIds]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/24 19:40
+     * version：1.0
+     */
+    @Override
+    public Result allocMenu(Long roleId, List<Long> menuIds) {
+        //先删除原有关系
+        QueryWrapper<UmsRoleMenuRelation> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(UmsRoleMenuRelation::getRoleId, roleId);
+        roleMenuRelationService.remove(wrapper);
+        //批量插入新关系
+        List<UmsRoleMenuRelation> relationList = new ArrayList<>();
+        for (Long menuId : menuIds) {
+            UmsRoleMenuRelation relation = new UmsRoleMenuRelation();
+            relation.setRoleId(roleId);
+            relation.setMenuId(menuId);
+            relationList.add(relation);
+        }
+        roleMenuRelationService.saveBatch(relationList);
+        return menuIds.size() > ZERO ? Result.success() : Result.failed();
     }
 
     @Override

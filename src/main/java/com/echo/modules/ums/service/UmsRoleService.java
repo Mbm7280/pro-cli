@@ -58,6 +58,11 @@ public interface UmsRoleService extends IService<UmsRole> {
     @Transactional
     Result allocResource(Long roleId, List<Long> resourceIds);
 
+    /**
+     * 给角色分配菜单
+     */
+    @Transactional
+    Result allocMenu(Long roleId, List<Long> menuIds);
 
     /**
      * 修改角色状态
