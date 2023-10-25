@@ -123,23 +123,36 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
     @Override
     public Result<LoginResDTO> login(LoginReqDTO loginReqDTO) {
         LoginResDTO loginResDTO = new LoginResDTO();
-        //密码需要客户端加密后传递
+
+        // 获取用户信息
         UserDetails userDetails = loadUserByUsername(loginReqDTO.getUsername());
-        if (!passwordEncoder.matches(loginReqDTO.getPassword(), userDetails.getPassword())) {
-            Asserts.fail("密码不正确");
-        }
+
+        // 校验用户账号是否被禁用
         if (!userDetails.isEnabled()) {
             Asserts.fail("帐号已被禁用");
         }
+
+        // 密码校验
+        if (!passwordEncoder.matches(loginReqDTO.getPassword(), userDetails.getPassword())) {
+            Asserts.fail("密码不正确");
+        }
+
+        // 将认证信息放到上下文中
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        // 生成Token
         String token = jwtTokenUtil.generateToken(userDetails);
 
+        // 校验Token生成
         if (StrUtil.isBlank(token)) {
             return Result.failed("用户名或密码错误");
         }
+
+        // 返回
         loginResDTO.setToken(token);
         loginResDTO.setTokenHead(tokenHead);
+
         return Result.success(loginResDTO);
     }
 
@@ -170,12 +183,15 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        //获取用户信息
+        // 获取用户信息
         UmsUser admin = getAdminByUsername(username);
+
         if (admin != null) {
+            // 获取该用户的资源信息
             List<UmsResource> resourceList = getResourceList(admin.getId());
             return new AdminUserDetails(admin, resourceList);
         }
+
         throw new UsernameNotFoundException("用户名或密码错误");
     }
 
