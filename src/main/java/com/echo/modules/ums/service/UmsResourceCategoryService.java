@@ -27,4 +27,23 @@ public interface UmsResourceCategoryService extends IService<UmsResourceCategory
      */
     Result addResourceCategory(UmsResourceCategory umsResourceCategory);
 
+
+    /**
+     * 修改资源分类
+     *
+     * @param umsResourceCategory
+     * @return
+     */
+    Result updateResourceCategory(UmsResourceCategory umsResourceCategory);
+
+
+    /**
+     * 根据ID删除后台资源
+     *
+     * @param resourceCategoryId
+     * @return
+     */
+    Result delResourceCategory(Long resourceCategoryId);
+
+
 }

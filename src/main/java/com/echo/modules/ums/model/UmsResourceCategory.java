@@ -3,8 +3,10 @@ package com.echo.modules.ums.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -34,6 +36,9 @@ public class UmsResourceCategory implements Serializable {
 
     @ApiModelProperty("分类名称")
     private String name;
+
+    @ApiModelProperty("启用状态：0->禁用；1->启用")
+    private Integer status;
 
     @ApiModelProperty("排序")
     private Integer sort;

@@ -29,7 +29,7 @@ public class UmsResourceCategoryController {
     @Autowired
     private UmsResourceCategoryService resourceCategoryService;
 
-    @ApiOperation("查询所有后台资源分类")
+    @ApiOperation("获取所有资源分类")
     @GetMapping(value = "/getAllResourceCategories")
     public Result<List<UmsResourceCategory>> getAllResourceCategories() {
         return resourceCategoryService.getAllResourceCategories();
@@ -42,18 +42,16 @@ public class UmsResourceCategoryController {
     }
 
 
-    @ApiOperation("修改后台资源分类")
-    @PutMapping(value = "/updateResourceCategory/{id}")
-    public Result updateResourceCategory(@PathVariable Long id,
-                                         @RequestBody UmsResourceCategory umsResourceCategory) {
-        umsResourceCategory.setId(id);
-        return resourceCategoryService.updateById(umsResourceCategory) ? Result.success() : Result.failed();
+    @ApiOperation("修改资源分类")
+    @PutMapping(value = "/updateResourceCategory")
+    public Result updateResourceCategory(@RequestBody UmsResourceCategory umsResourceCategory) {
+        return resourceCategoryService.updateResourceCategory(umsResourceCategory);
     }
 
     @ApiOperation("根据ID删除后台资源")
-    @DeleteMapping(value = "/delResourceCategory/{id}")
-    public Result delete(@PathVariable Long id) {
-        return resourceCategoryService.removeById(id) ? Result.success() : Result.failed();
+    @DeleteMapping(value = "/delResourceCategory/{resourceCategoryId}")
+    public Result delResourceCategory(@PathVariable Long resourceCategoryId) {
+        return resourceCategoryService.delResourceCategory(resourceCategoryId);
     }
 
 
