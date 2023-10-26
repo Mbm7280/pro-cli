@@ -90,7 +90,7 @@ public class UmsUserController {
         data.put("icon", umsUser.getIcon());
         List<UmsRole> roleList = userService.getRoleListByUserId(umsUser.getId());
         if(CollUtil.isNotEmpty(roleList)){
-            List<String> roles = roleList.stream().map(UmsRole::getRolename).collect(Collectors.toList());
+            List<String> roles = roleList.stream().map(UmsRole::getRoleName).collect(Collectors.toList());
             data.put("roles",roles);
         }
         return Result.success(data);

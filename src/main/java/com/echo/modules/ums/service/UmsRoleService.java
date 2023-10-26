@@ -27,6 +27,23 @@ public interface UmsRoleService extends IService<UmsRole> {
 
 
     /**
+     * 修改角色
+     *
+     * @param role
+     * @return
+     */
+    Result updateRoleByRoleId(UmsRole role);
+
+
+    /**
+     * 获取所有角色
+     *
+     * @return
+     */
+    Result<List<UmsRole>> getAllRoles();
+
+
+    /**
      * 批量删除角色
      */
     Result delRoleBatch(List<Long> ids);
@@ -65,12 +82,11 @@ public interface UmsRoleService extends IService<UmsRole> {
     Result allocMenu(Long roleId, List<Long> menuIds);
 
     /**
-     * 修改角色状态
+     * 删除角色
      *
      * @param id
-     * @param status
      * @return
      */
-    Result updateRoleStatus(Long id, Integer status);
+    Result delRoleByRoleId(Long id);
 
 }

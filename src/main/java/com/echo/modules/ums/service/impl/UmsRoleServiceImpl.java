@@ -1,6 +1,8 @@
 package com.echo.modules.ums.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.echo.common.constant.CommonConstant.ONE;
 import static com.echo.common.constant.CommonConstant.ZERO;
@@ -68,8 +71,50 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
     @Override
     public Result addRole(UmsRole role) {
         role.setCreateTime(new Date());
-        role.setStatus(ONE);
+        if (role.getStatus().equals(ZERO)) {
+            role.setStatus(ONE);
+        }
         return umsRoleMapper.insert(role) == ONE ? Result.success() : Result.failed();
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsRoleServiceImpl
+     * 方法名称：updateRoleByRoleId
+     * 方法描述：{ 修改角色 }
+     * param：[role]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/26 19:12
+     * version：1.0
+     */
+    @Override
+    public Result updateRoleByRoleId(UmsRole role) {
+        UmsRole umsRole = getById(role.getId());
+        if (ObjectUtil.isEmpty(umsRole)) {
+            return Result.failed(THE_ROLE_UPDATE_FAILED);
+        }
+        if (role.getStatus().equals(ZERO)) {
+            role.setStatus(ONE);
+        }
+        return updateById(role) ? Result.success() : Result.failed();
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsRoleServiceImpl
+     * 方法名称：getAllRoles
+     * 方法描述：{ 获取所有角色 }
+     * param：[]
+     * return：com.echo.config.api.Result<java.util.List<com.echo.modules.ums.model.UmsRole>>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/26 19:21
+     * version：1.0
+     */
+    @Override
+    public Result<List<UmsRole>> getAllRoles() {
+        List<UmsRole> umsRoleList = list();
+        return CollUtil.isNotEmpty(umsRoleList) ? Result.success(umsRoleList) : Result.failed(THE_ROLE_QUERY_FAILED);
     }
 
     /**
@@ -85,11 +130,31 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
      */
     @Override
     public Result delRoleBatch(List<Long> ids) {
-        boolean status = removeByIds(ids);
-        if (status) {
-            userCacheService.delResourceListByRoleIds(ids);
+        if (CollUtil.isEmpty(ids)) {
+            return Result.failed(VALIDATE_FAILED);
         }
-        return status ? Result.success() : Result.failed();
+        List<UmsRole> umsRoleList = umsRoleMapper.selectList(new LambdaQueryWrapper<UmsRole>().eq(UmsRole::getStatus, ONE).in(UmsRole::getId, ids));
+        if (CollUtil.isEmpty(umsRoleList)) {
+            return Result.failed(THE_ROLE_QUERY_FAILED);
+        }
+        List<UmsRole> realDelRoleList = null;
+        if (umsRoleList.size() != ids.size()) {
+            realDelRoleList = umsRoleList.stream().filter(role -> ids.contains(role.getId())).collect(Collectors.toList());
+        }
+        if (CollUtil.isEmpty(realDelRoleList)) {
+            return Result.failed(VALIDATE_FAILED);
+        }
+        realDelRoleList.stream().forEach(role -> role.setStatus(ZERO));
+        boolean result = updateBatchById(realDelRoleList);
+
+        List<Long> roleIds = new ArrayList<>();
+        realDelRoleList.forEach(role -> roleIds.add(role.getId()));
+
+        if (result) {
+            userCacheService.delResourceListByRoleIds(roleIds);
+        }
+
+        return result ? Result.success() : Result.failed();
     }
 
     /**
@@ -109,7 +174,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
         QueryWrapper<UmsRole> wrapper = new QueryWrapper<>();
         LambdaQueryWrapper<UmsRole> lambda = wrapper.lambda();
         if (StrUtil.isNotEmpty(keyword)) {
-            lambda.like(UmsRole::getRolename, keyword);
+            lambda.like(UmsRole::getRoleName, keyword);
         }
         return Result.success(page(page, wrapper));
     }
@@ -173,12 +238,25 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
         return menuIds.size() > ZERO ? Result.success() : Result.failed();
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsRoleServiceImpl
+     * 方法名称：delRoleByRoleId
+     * 方法描述：{ 删除角色 }
+     * param：[id]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/26 20:21
+     * version：1.0
+     */
     @Override
-    public Result updateRoleStatus(Long id, Integer status) {
-        UmsRole umsRole = new UmsRole();
-        umsRole.setId(id);
-        umsRole.setStatus(status);
-        return updateById(umsRole) ? Result.success() : Result.failed(THE_ROLE_UPDATE_FAILED);
+    public Result delRoleByRoleId(Long id) {
+        UmsRole umsRole = getById(id);
+        if (ObjectUtil.isEmpty(umsRole)) {
+            return Result.failed(THE_ROLE_QUERY_FAILED);
+        }
+        umsRole.setStatus(ZERO);
+        return updateById(umsRole) ? Result.success() : Result.failed(THE_ROLE_DELETE_FAILED);
     }
 
     /**
@@ -215,10 +293,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
     @Override
     public Result<List<UmsMenu>> getMenusByRoleId(Long roleId) {
         List<UmsMenu> menuList = menuMapper.getMenusByRoleId(roleId);
-        if (CollectionUtil.isEmpty(menuList)) {
-            return Result.failed(THE_MENU_QUERY_FAILED);
-        }
-        return Result.success(menuList);
+        return CollUtil.isEmpty(menuList) ? Result.failed(THE_MENU_QUERY_FAILED) : Result.success(menuList);
     }
 
     /**
@@ -235,10 +310,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
     @Override
     public Result<List<UmsResource>> getResourcesByRoleId(Long roleId) {
         List<UmsResource> resourceList = resourceMapper.getResourcesByRoleId(roleId);
-        if (CollectionUtil.isEmpty(resourceList)) {
-            return Result.failed(THE_RESOURCE_QUERY_FAILED);
-        }
-        return Result.success(resourceList);
+        return CollUtil.isEmpty(resourceList) ? Result.failed(THE_RESOURCE_QUERY_FAILED) : Result.success(resourceList);
     }
 
 }

@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.echo.modules.ums.model.UmsRole">
         <id column="id" property="id" />
-        <result column="rolename" property="rolename" />
+        <result column="role_name" property="roleName" />
         <result column="role_desc" property="roleDesc" />
         <result column="user_count" property="userCount" />
         <result column="create_time" property="createTime" />

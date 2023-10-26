@@ -1,7 +1,6 @@
 package com.echo.modules.ums.controller;
 
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.echo.config.api.Result;
 import com.echo.modules.ums.model.UmsMenu;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.echo.config.api.ResultCode.THE_ROLE_QUERY_FAILED;
 
 /**
  * <p>
@@ -35,30 +33,10 @@ public class UmsRoleController {
     @Autowired
     private UmsRoleService roleService;
 
-    @ApiOperation("添加角色")
-    @PostMapping(value = "/addRole")
-    public Result addRole(@RequestBody UmsRole role) {
-        return roleService.addRole(role);
-    }
-
-
-    @ApiOperation("修改角色")
-    @PutMapping(value = "/updateRole/{id}")
-    public Result updateRole(@PathVariable Long id, @RequestBody UmsRole role) {
-        role.setId(id);
-        return roleService.updateById(role) ? Result.success() : Result.failed();
-    }
-
-    @ApiOperation("批量删除角色")
-    @PostMapping(value = "/delRoleBatch")
-    public Result delRoleBatch(@RequestParam("ids") List<Long> ids) {
-        return roleService.delRoleBatch(ids);
-    }
-
     @ApiOperation("获取所有角色")
     @GetMapping(value = "/getAllRoles")
     public Result<List<UmsRole>> getAllRoles() {
-        return CollectionUtil.isNotEmpty(roleService.list()) ? Result.success() : Result.failed(THE_ROLE_QUERY_FAILED);
+        return roleService.getAllRoles();
     }
 
     @ApiOperation("根据角色名称分页获取角色列表")
@@ -67,11 +45,32 @@ public class UmsRoleController {
         return roleService.getPageRoleList(keyword, pageSize, pageNum);
     }
 
-    @ApiOperation("修改角色状态")
-    @PutMapping(value = "/updateRoleStatus/{id}")
-    public Result updateRoleStatus(@PathVariable Long id, @RequestParam(value = "status") Integer status) {
-        return roleService.updateRoleStatus(id, status);
+    @ApiOperation("添加角色")
+    @PostMapping(value = "/addRole")
+    public Result addRole(@RequestBody UmsRole role) {
+        return roleService.addRole(role);
     }
+
+
+    @ApiOperation("修改角色")
+    @PutMapping(value = "/updateRoleByRoleId")
+    public Result updateRoleByRoleId(@RequestBody UmsRole role) {
+        return roleService.updateRoleByRoleId(role);
+    }
+
+
+    @ApiOperation("删除角色")
+    @DeleteMapping(value = "/delRoleByRoleId/{id}")
+    public Result delRoleByRoleId(@PathVariable Long id) {
+        return roleService.delRoleByRoleId(id);
+    }
+
+    @ApiOperation("批量删除角色")
+    @PostMapping(value = "/delRoleBatch")
+    public Result delRoleBatch(@RequestParam("ids") List<Long> ids) {
+        return roleService.delRoleBatch(ids);
+    }
+
 
     @ApiOperation("获取角色相关菜单")
     @GetMapping(value = "/getMenusByRoleId/{roleId}")

@@ -304,24 +304,24 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
     }
 
     @Override
-    public Result allowUserRole(Long adminId, List<Long> roleIds) {
+    public Result allowUserRole(Long userId, List<Long> roleIds) {
         int count = roleIds == null ? ZERO : roleIds.size();
         //先删除原来的关系
         QueryWrapper<UmsUserRoleRelation> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(UmsUserRoleRelation::getAdminId, adminId);
+        wrapper.lambda().eq(UmsUserRoleRelation::getUserId, userId);
         adminRoleRelationService.remove(wrapper);
         //建立新关系
         if (!CollectionUtils.isEmpty(roleIds)) {
             List<UmsUserRoleRelation> list = new ArrayList<>();
             for (Long roleId : roleIds) {
                 UmsUserRoleRelation roleRelation = new UmsUserRoleRelation();
-                roleRelation.setAdminId(adminId);
+                roleRelation.setUserId(userId);
                 roleRelation.setRoleId(roleId);
                 list.add(roleRelation);
             }
             adminRoleRelationService.saveBatch(list);
         }
-        getCacheService().delResourceList(adminId);
+        getCacheService().delResourceList(userId);
         return Result.success();
     }
 

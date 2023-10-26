@@ -30,7 +30,7 @@ public class UmsRole implements Serializable {
     private Long id;
 
     @ApiModelProperty("名称")
-    private String rolename;
+    private String roleName;
 
     @ApiModelProperty("描述")
     private String roleDesc;

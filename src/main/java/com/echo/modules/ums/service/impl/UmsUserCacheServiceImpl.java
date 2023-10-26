@@ -86,7 +86,7 @@ public class UmsUserCacheServiceImpl implements UmsUserCacheService {
         List<UmsUserRoleRelation> relationList = userRoleRelationService.list(wrapper);
         if (CollUtil.isNotEmpty(relationList)) {
             String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
-            List<String> keys = relationList.stream().map(relation -> keyPrefix + relation.getAdminId()).collect(Collectors.toList());
+            List<String> keys = relationList.stream().map(relation -> keyPrefix + relation.getUserId()).collect(Collectors.toList());
             redisService.del(keys);
         }
     }
@@ -98,7 +98,7 @@ public class UmsUserCacheServiceImpl implements UmsUserCacheService {
         List<UmsUserRoleRelation> relationList = userRoleRelationService.list(wrapper);
         if (CollUtil.isNotEmpty(relationList)) {
             String keyPrefix = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":";
-            List<String> keys = relationList.stream().map(relation -> keyPrefix + relation.getAdminId()).collect(Collectors.toList());
+            List<String> keys = relationList.stream().map(relation -> keyPrefix + relation.getUserId()).collect(Collectors.toList());
             redisService.del(keys);
         }
     }

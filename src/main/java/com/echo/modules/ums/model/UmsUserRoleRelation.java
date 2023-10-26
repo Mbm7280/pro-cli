@@ -28,7 +28,7 @@ public class UmsUserRoleRelation implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private Long adminId;
+    private Long userId;
 
     private Long roleId;
 

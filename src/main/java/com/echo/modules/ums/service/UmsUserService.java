@@ -103,11 +103,11 @@ public interface UmsUserService extends IService<UmsUser> {
     /**
      * 修改用户角色关系
      *
-     * @param adminId
+     * @param userId
      * @param roleIds
      * @return
      */
     @Transactional
-    Result allowUserRole(Long adminId, List<Long> roleIds);
+    Result allowUserRole(Long userId, List<Long> roleIds);
 
 }

@@ -42,6 +42,7 @@ public enum ResultCode implements IErrorCode {
 
     THE_ROLE_UPDATE_FAILED(1010, "更新角色失败，请稍后重试！"),
 
+
     THE_AUTHORIZED_FAILED(1011, "验证失败，请先登录！"),
 
     THE_USER_IS_NOT_EXIST(1012, "用户不存在，请重新输入！"),
@@ -50,7 +51,7 @@ public enum ResultCode implements IErrorCode {
 
     THE_PASSWORD_UPDATE_FAILED(1014, "旧密码修改失败，请稍后重试！"),
 
-
+    THE_ROLE_DELETE_FAILED(1015, "删除角色失败，请稍后重试！"),
     ;
 
     private long code;
