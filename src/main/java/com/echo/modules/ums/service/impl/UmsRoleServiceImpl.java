@@ -192,11 +192,15 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
      */
     @Override
     public Result allocResource(Long roleId, List<Long> resourceIds) {
-        //先删除原有关系
+        UmsRole umsRole = this.getOne(new LambdaQueryWrapper<UmsRole>().eq(UmsRole::getStatus, ONE).eq(UmsRole::getId, roleId));
+        if(ObjectUtil.isEmpty(umsRole)){
+            return Result.failed(THE_ROLE_QUERY_FAILED);
+        }
+        // 先删除原有关系
         QueryWrapper<UmsRoleResourceRelation> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(UmsRoleResourceRelation::getRoleId, roleId);
         roleResourceRelationService.remove(wrapper);
-        //批量插入新关系
+        // 批量插入新关系
         List<UmsRoleResourceRelation> relationList = new ArrayList<>();
         for (Long resourceId : resourceIds) {
             UmsRoleResourceRelation relation = new UmsRoleResourceRelation();
@@ -222,6 +226,10 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
      */
     @Override
     public Result allocMenu(Long roleId, List<Long> menuIds) {
+        UmsRole umsRole = this.getOne(new LambdaQueryWrapper<UmsRole>().eq(UmsRole::getStatus, ONE).eq(UmsRole::getId, roleId));
+        if(ObjectUtil.isEmpty(umsRole)){
+            return Result.failed(THE_ROLE_QUERY_FAILED);
+        }
         //先删除原有关系
         QueryWrapper<UmsRoleMenuRelation> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(UmsRoleMenuRelation::getRoleId, roleId);
