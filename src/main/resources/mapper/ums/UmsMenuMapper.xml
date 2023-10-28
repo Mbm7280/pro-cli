@@ -16,7 +16,7 @@
         <result column="status" property="status"/>
     </resultMap>
 
-    <select id="getMenuListByAdminId" resultType="com.echo.modules.ums.model.UmsMenu">
+    <select id="getMenuListByUserId" resultType="com.echo.modules.ums.model.UmsMenu">
         SELECT m.id          id,
                m.parent_id   parentId,
                m.create_time createTime,
@@ -30,7 +30,7 @@
                  LEFT JOIN ums_role r ON urr.role_id = r.id
                  LEFT JOIN ums_role_menu_relation rmr ON r.id = rmr.role_id
                  LEFT JOIN ums_menu m ON rmr.menu_id = m.id
-        WHERE arr.admin_id = #{adminId}
+        WHERE urr.user_id = #{userId}
 
           AND m.id IS NOT NULL
         GROUP BY m.id

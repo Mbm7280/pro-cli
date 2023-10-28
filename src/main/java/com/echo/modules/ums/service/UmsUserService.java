@@ -13,7 +13,6 @@ import com.echo.modules.ums.model.UmsUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -70,10 +69,6 @@ public interface UmsUserService extends IService<UmsUser> {
      */
     UmsUser getAdminByUsername(String username);
 
-    /**
-     * 获取缓存服务
-     */
-    UmsUserCacheService getCacheService();
 
     /**
      * 根据用户获取角色
@@ -88,7 +83,7 @@ public interface UmsUserService extends IService<UmsUser> {
     /**
      * 修改指定用户信息
      */
-    Result updateUserInfoByUserId(Long id, UmsUser userInfo);
+    Result updateUserInfoByUserId(Long userId, UmsUser userInfo);
 
 
     /**
@@ -97,7 +92,13 @@ public interface UmsUserService extends IService<UmsUser> {
     Result updateUserPassword(UpdateUserPasswordReqDTO updateUserPasswordReqDTO);
 
 
-    Result delUserByUserId(@PathVariable Long id);
+    /**
+     * 删除指定用户信息
+     *
+     * @param userId
+     * @return
+     */
+    Result delUserByUserId(Long userId);
 
 
     /**
@@ -109,5 +110,11 @@ public interface UmsUserService extends IService<UmsUser> {
      */
     @Transactional
     Result allowUserRole(Long userId, List<Long> roleIds);
+
+    /**
+     * 获取缓存服务
+     */
+    UmsUserCacheService getCacheService();
+
 
 }

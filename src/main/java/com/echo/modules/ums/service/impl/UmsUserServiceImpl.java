@@ -1,6 +1,7 @@
 package com.echo.modules.ums.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -181,6 +182,17 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
         return Result.success(refreshTokenResDTO);
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：loadUserByUsername
+     * 方法描述：{ 获取用户信息 }
+     * param：[username]
+     * return：org.springframework.security.core.userdetails.UserDetails
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:41
+     * version：1.0
+     */
     @Override
     public UserDetails loadUserByUsername(String username) {
         // 获取用户信息
@@ -195,6 +207,17 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
         throw new UsernameNotFoundException("用户名或密码错误");
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：getResourceList
+     * 方法描述：{ 获取指定用户的可访问资源 }
+     * param：[adminId]
+     * return：java.util.List<com.echo.modules.ums.model.UmsResource>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:41
+     * version：1.0
+     */
     @Override
     public List<UmsResource> getResourceList(Long adminId) {
         List<UmsResource> resourceList = getCacheService().getResourceList(adminId);
@@ -208,6 +231,17 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
         return resourceList;
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：getAdminByUsername
+     * 方法描述：{ 根据用户名获取后台管理员 }
+     * param：[username]
+     * return：com.echo.modules.ums.model.UmsUser
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:41
+     * version：1.0
+     */
     @Override
     public UmsUser getAdminByUsername(String username) {
         UmsUser admin = getCacheService().getAdmin(username);
@@ -225,16 +259,35 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
         return null;
     }
 
-    @Override
-    public UmsUserCacheService getCacheService() {
-        return SpringUtil.getBean(UmsUserCacheService.class);
-    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：getRoleListByUserId
+     * 方法描述：{ 根据用户获取角色 }
+     * param：[userId]
+     * return：java.util.List<com.echo.modules.ums.model.UmsRole>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:43
+     * version：1.0
+     */
 
     @Override
     public List<UmsRole> getRoleListByUserId(Long userId) {
         return roleMapper.getRoleListByUserId(userId);
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：getPageUserListByKeyword
+     * 方法描述：{ 根据用户名或昵称分页查询用户 }
+     * param：[keyword, pageSize, pageNum]
+     * return：com.echo.config.api.Result<com.baomidou.mybatisplus.extension.plugins.pagination.Page<com.echo.modules.ums.model.UmsUser>>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:43
+     * version：1.0
+     */
     @Override
     public Result<Page<UmsUser>> getPageUserListByKeyword(String keyword, Integer pageSize, Integer pageNum) {
         Page<UmsUser> page = new Page<>(pageNum, pageSize);
@@ -247,10 +300,24 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
         return Result.success(page(page, wrapper));
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：updateUserInfoByUserId
+     * 方法描述：{ 修改指定用户信息 }
+     * param：[userId, userInfo]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:43
+     * version：1.0
+     */
     @Override
-    public Result updateUserInfoByUserId(Long id, UmsUser userInfo) {
-        userInfo.setId(id);
-        UmsUser rawUser = getById(id);
+    public Result updateUserInfoByUserId(Long userId, UmsUser userInfo) {
+        UmsUser rawUser = getById(userId);
+        if (ObjectUtil.isEmpty(rawUser)) {
+            return Result.failed(THE_USER_QUERY_FAILED);
+        }
+        userInfo.setId(userId);
         if (rawUser.getPassword().equals(userInfo.getPassword())) {
             //与原加密密码相同的不需要修改
             userInfo.setPassword(null);
@@ -263,15 +330,25 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
             }
         }
         if (updateById(userInfo)) {
-            getCacheService().delAdmin(id);
+            getCacheService().delAdmin(userId);
             return Result.success();
         }
         return Result.failed();
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：updateUserPassword
+     * 方法描述：{ 修改用户密码 }
+     * param：[updateUserPasswordReqDTO]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:44
+     * version：1.0
+     */
     @Override
     public Result updateUserPassword(UpdateUserPasswordReqDTO updateUserPasswordReqDTO) {
-
         if (StrUtil.isEmpty(updateUserPasswordReqDTO.getUsername())
                 || StrUtil.isEmpty(updateUserPasswordReqDTO.getOldPassword())
                 || StrUtil.isEmpty(updateUserPasswordReqDTO.getNewPassword())) {
@@ -295,14 +372,44 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
         return Result.failed(THE_PASSWORD_UPDATE_FAILED);
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：delUserByUserId
+     * 方法描述：{ 删除指定用户信息 }
+     * param：[userId]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:44
+     * version：1.0
+     */
     @Override
-    public Result delUserByUserId(Long id) {
-        getCacheService().delAdmin(id);
-        removeById(id);
-        getCacheService().delResourceList(id);
-        return Result.success();
+    public Result delUserByUserId(Long userId) {
+        UmsUser umsUser = getOne(new LambdaQueryWrapper<UmsUser>().eq(UmsUser::getId, userId).eq(UmsUser::getStatus, ONE));
+        if (ObjectUtil.isEmpty(umsUser)) {
+            return Result.failed(THE_USER_QUERY_FAILED);
+        }
+        umsUser.setStatus(ZERO);
+        boolean success = updateById(umsUser);
+        if (success) {
+            getCacheService().delResourceList(userId);
+            getCacheService().delAdmin(userId);
+            return Result.success();
+        }
+        return Result.failed(THE_USER_DELETE_FAILED);
     }
 
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：allowUserRole
+     * 方法描述：{ 修改用户角色关系 }
+     * param：[userId, roleIds]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:44
+     * version：1.0
+     */
     @Override
     public Result allowUserRole(Long userId, List<Long> roleIds) {
         int count = roleIds == null ? ZERO : roleIds.size();
@@ -323,6 +430,22 @@ public class UmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> impl
         }
         getCacheService().delResourceList(userId);
         return Result.success();
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsUserServiceImpl
+     * 方法名称：getCacheService
+     * 方法描述：{ 获取缓存服务 }
+     * param：[]
+     * return：com.echo.modules.ums.service.UmsUserCacheService
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 15:42
+     * version：1.0
+     */
+    @Override
+    public UmsUserCacheService getCacheService() {
+        return SpringUtil.getBean(UmsUserCacheService.class);
     }
 
 }

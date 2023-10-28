@@ -19,7 +19,7 @@ public interface UmsMenuMapper extends BaseMapper<UmsMenu> {
     /**
      * 根据管理员ID获取对应菜单
      */
-    List<UmsMenu> getMenuListByAdminId(@Param("adminId") Long adminId);
+    List<UmsMenu> getMenuListByUserId(@Param("userId") Long userId);
 
 
     /**

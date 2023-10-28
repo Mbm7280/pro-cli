@@ -193,7 +193,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
     @Override
     public Result allocResource(Long roleId, List<Long> resourceIds) {
         UmsRole umsRole = this.getOne(new LambdaQueryWrapper<UmsRole>().eq(UmsRole::getStatus, ONE).eq(UmsRole::getId, roleId));
-        if(ObjectUtil.isEmpty(umsRole)){
+        if (ObjectUtil.isEmpty(umsRole)) {
             return Result.failed(THE_ROLE_QUERY_FAILED);
         }
         // 先删除原有关系
@@ -227,7 +227,7 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
     @Override
     public Result allocMenu(Long roleId, List<Long> menuIds) {
         UmsRole umsRole = this.getOne(new LambdaQueryWrapper<UmsRole>().eq(UmsRole::getStatus, ONE).eq(UmsRole::getId, roleId));
-        if(ObjectUtil.isEmpty(umsRole)){
+        if (ObjectUtil.isEmpty(umsRole)) {
             return Result.failed(THE_ROLE_QUERY_FAILED);
         }
         //先删除原有关系
@@ -279,12 +279,9 @@ public class UmsRoleServiceImpl extends ServiceImpl<UmsRoleMapper, UmsRole> impl
      * version：1.0
      */
     @Override
-    public Result<List<UmsMenu>> getMenuListByAdminId(Long adminId) {
-        List<UmsMenu> menuList = menuMapper.getMenuListByAdminId(adminId);
-        if (CollectionUtil.isEmpty(menuList)) {
-            return Result.failed(THE_MENU_QUERY_FAILED);
-        }
-        return Result.success(menuList);
+    public List<UmsMenu> getMenuListByUserId(Long userId) {
+        List<UmsMenu> menuList = menuMapper.getMenuListByUserId(userId);
+        return menuList;
     }
 
     /**

@@ -57,6 +57,7 @@ public class UmsUserController {
 
     @Autowired
     private UmsRoleService roleService;
+
     @ApiOperation(value = "用户注册")
     @PostMapping(value = "/register")
     public Result<UmsUser> register(@Validated @RequestBody RegisterReqDTO registerReqDTO) {
@@ -79,19 +80,19 @@ public class UmsUserController {
     @ApiOperation(value = "获取当前登录用户信息")
     @GetMapping(value = "/getUserInfo")
     public Result getUserInfo(Principal principal) {
-        if(principal==null){
-            return Result.failed (THE_AUTHORIZED_FAILED);
+        if (principal == null) {
+            return Result.failed(THE_AUTHORIZED_FAILED);
         }
         String username = principal.getName();
         UmsUser umsUser = userService.getAdminByUsername(username);
         Map<String, Object> data = new HashMap<>();
         data.put("username", umsUser.getUsername());
-        data.put("menus", roleService.getMenuListByAdminId (umsUser.getId()));
+        data.put("menus", roleService.getMenuListByUserId(umsUser.getId()));
         data.put("icon", umsUser.getIcon());
         List<UmsRole> roleList = userService.getRoleListByUserId(umsUser.getId());
-        if(CollUtil.isNotEmpty(roleList)){
+        if (CollUtil.isNotEmpty(roleList)) {
             List<String> roles = roleList.stream().map(UmsRole::getRoleName).collect(Collectors.toList());
-            data.put("roles",roles);
+            data.put("roles", roles);
         }
         return Result.success(data);
     }
@@ -103,52 +104,43 @@ public class UmsUserController {
     }
 
     @ApiOperation("根据用户名或姓名分页获取用户列表")
-    @RequestMapping(value = "/getUserListByKeyword")
+    @GetMapping(value = "/getPageUserListByKeyword")
     public Result<Page<UmsUser>> getPageUserListByKeyword(@RequestParam(value = "keyword", required = false) String keyword,
-                                                   @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
-                                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+                                                          @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
         return userService.getPageUserListByKeyword(keyword, pageSize, pageNum);
     }
 
     @ApiOperation("获取指定用户信息")
-    @GetMapping(value = "/getUserInfoByUserId/{id}")
-    public Result<UmsUser> getUserInfoByUserId(@PathVariable Long id) {
-        UmsUser userInfo = userService.getById(id);
+    @GetMapping(value = "/getUserInfoByUserId/{userId}")
+    public Result<UmsUser> getUserInfoByUserId(@PathVariable Long userId) {
+        UmsUser userInfo = userService.getById(userId);
         return Result.success(userInfo);
     }
 
     @ApiOperation("修改指定用户信息")
-    @PutMapping(value = "/updateUserInfoByUserId/{id}")
-    public Result updateUserInfoByUserId(@PathVariable Long id, @RequestBody UmsUser userInfo) {
-        return userService.updateUserInfoByUserId(id, userInfo);
+    @PutMapping(value = "/updateUserInfoByUserId/{userId}")
+    public Result updateUserInfoByUserId(@PathVariable Long userId, @RequestBody UmsUser userInfo) {
+        return userService.updateUserInfoByUserId(userId, userInfo);
     }
 
     @ApiOperation("修改指定用户密码")
-    @PostMapping(value = "/updateUserPassword")
+    @PutMapping(value = "/updateUserPassword")
     public Result updateUserPassword(@Validated @RequestBody UpdateUserPasswordReqDTO updateUserPasswordReqDTO) {
         return userService.updateUserPassword(updateUserPasswordReqDTO);
     }
 
     @ApiOperation("删除指定用户信息")
-    @PostMapping(value = "/delUserByUserId/{id}")
-    public Result delUserByUserId(@PathVariable Long id) {
-        return userService.delUserByUserId(id);
+    @DeleteMapping(value = "/delUserByUserId/{userId}")
+    public Result delUserByUserId(@PathVariable Long userId) {
+        return userService.delUserByUserId(userId);
     }
-
-    @ApiOperation("修改帐号状态")
-    @PostMapping(value = "/updateUserStatus/{id}")
-    public Result updateUserStatus(@PathVariable Long id,@RequestParam(value = "status") Integer status) {
-        UmsUser umsAdmin = new UmsUser();
-        umsAdmin.setStatus(status);
-        return userService.updateUserInfoByUserId(id,umsAdmin);
-    }
-
 
     @ApiOperation("给用户分配角色")
     @PostMapping(value = "/allowUserRole")
-    public Result allowUserRole(@RequestParam("adminId") Long adminId,
-                                   @RequestParam("roleIds") List<Long> roleIds) {
-        return userService.allowUserRole(adminId, roleIds);
+    public Result allowUserRole(@RequestParam("userId") Long userId,
+                                @RequestParam("roleIds") List<Long> roleIds) {
+        return userService.allowUserRole(userId, roleIds);
     }
 
 }

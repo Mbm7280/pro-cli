@@ -58,6 +58,11 @@ public enum ResultCode implements IErrorCode {
 
 
     THE_RESOURCE_UPDATE_FAILED(1017, "修改资源失败，请稍后重试！"),
+
+    THE_USER_QUERY_FAILED(1018, "查询用户失败，请稍后重试！"),
+
+    THE_USER_DELETE_FAILED(1019, "删除用户失败，请稍后重试！"),
+
     ;
 
     private long code;
