@@ -3,8 +3,10 @@ package com.echo.modules.ums.model;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.io.Serializable;
 import java.util.Date;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -43,6 +45,9 @@ public class UmsResource implements Serializable {
 
     @ApiModelProperty("创建时间")
     private Date createTime;
+
+    @ApiModelProperty("0 有效 1 无效")
+    private Integer status;
 
 
 }

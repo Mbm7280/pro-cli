@@ -31,7 +31,7 @@ public class UmsResourceController {
     @Autowired
     private DynamicSecurityMetadataSource dynamicSecurityMetadataSource;
 
-    @ApiOperation("添加后台资源")
+    @ApiOperation("添加资源")
     @PostMapping(value = "/addResource")
     public Result addResource(@RequestBody UmsResource umsResource) {
         Result result = resourceService.addResource(umsResource);
@@ -39,25 +39,24 @@ public class UmsResourceController {
         return result;
     }
 
-    @ApiOperation("修改后台资源")
-    @PutMapping(value = "/updateResourceByID/{id}")
-    public Result updateResourceById(@PathVariable Long id,
-                                     @RequestBody UmsResource umsResource) {
-        Result result = resourceService.updateResourceById(id, umsResource);
+    @ApiOperation("修改资源")
+    @PutMapping(value = "/updateResource")
+    public Result updateResource(@RequestBody UmsResource umsResource) {
+        Result result = resourceService.updateResource(umsResource);
         dynamicSecurityMetadataSource.clearDataSource();
         return result;
     }
 
     @ApiOperation("根据ID获取资源详情")
-    @GetMapping(value = "/getResourceById/{id}")
-    public Result<UmsResource> getResourceById(@PathVariable Long id) {
-        return Result.success(resourceService.getById(id));
+    @GetMapping(value = "/getResourceById/{resourceId}")
+    public Result<UmsResource> getResourceById(@PathVariable Long resourceId) {
+        return resourceService.getResourceById(resourceId);
     }
 
-    @ApiOperation("根据ID删除后台资源")
-    @DeleteMapping(value = "/delResourceById/{id}")
-    public Result delResourceById(@PathVariable Long id) {
-        Result result = resourceService.delResourceById(id);
+    @ApiOperation("根据ID删除资源")
+    @DeleteMapping(value = "/delResourceById/{resourceId}")
+    public Result delResourceById(@PathVariable Long resourceId) {
+        Result result = resourceService.delResourceById(resourceId);
         dynamicSecurityMetadataSource.clearDataSource();
         return result;
     }
