@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.echo.config.api.ResultCode.THE_MENU_DELETE_FAILED;
 
 /**
  * <p>
@@ -34,33 +33,32 @@ public class UmsMenuController {
     private UmsMenuService menuService;
 
     @ApiOperation("添加菜单")
-    @PostMapping(value = "/createMenu")
-    public Result createMenu(@RequestBody UmsMenu umsMenu) {
-        return menuService.createMenu(umsMenu);
+    @PostMapping(value = "/addMenu")
+    public Result addMenu(@RequestBody UmsMenu umsMenu) {
+        return menuService.addMenu(umsMenu);
     }
 
-    @ApiOperation("修改后台菜单")
-    @PostMapping(value = "/updateMenu/{id}")
-    public Result updateMenu(@PathVariable Long id,
-                             @RequestBody UmsMenu umsMenu) {
-        return menuService.updateMenu(id, umsMenu);
+    @ApiOperation("修改菜单")
+    @PutMapping(value = "/updateMenu")
+    public Result updateMenu(@RequestBody UmsMenu umsMenu) {
+        return menuService.updateMenu(umsMenu);
     }
 
     @ApiOperation("根据ID获取菜单详情")
-    @GetMapping(value = "getMenuByID/{id}")
-    public Result<UmsMenu> getMenuByID(@PathVariable Long id) {
-        return Result.success(menuService.getById(id));
+    @GetMapping(value = "getMenuById/{menuId}")
+    public Result<UmsMenu> getMenuById(@PathVariable Long menuId) {
+        return menuService.getMenuById(menuId);
     }
 
-    @ApiOperation("根据ID删除后台菜单")
-    @DeleteMapping(value = "/delMenuByID/{id}")
-    public Result delMenuByID(@PathVariable Long id) {
-        return menuService.removeById(id) ? Result.success() : Result.failed(THE_MENU_DELETE_FAILED);
+    @ApiOperation("根据ID删除菜单")
+    @DeleteMapping(value = "/delMenu/{menuId}")
+    public Result delMenu(@PathVariable Long menuId) {
+        return menuService.delMenu(menuId);
 
     }
 
 
-    @ApiOperation("分页查询后台菜单")
+    @ApiOperation("分页查询菜单")
     @GetMapping(value = "/getPageMenuList/{parentId}")
     public Result<Page<UmsMenu>> getPageMenuList(@PathVariable Long parentId,
                                                  @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
@@ -75,9 +73,9 @@ public class UmsMenuController {
     }
 
     @ApiOperation("修改菜单显示状态")
-    @PostMapping(value = "/updateHidden/{id}")
-    public Result updateHidden(@PathVariable Long id, @RequestParam("hidden") Integer hidden) {
-        return menuService.updateMenuHidden(id, hidden);
+    @GetMapping(value = "/updateHidden/{menuId}")
+    public Result updateHidden(@PathVariable Long menuId) {
+        return menuService.updateMenuHidden(menuId);
     }
 
 }

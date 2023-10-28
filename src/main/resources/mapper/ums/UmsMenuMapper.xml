@@ -13,6 +13,7 @@
         <result column="name" property="name"/>
         <result column="icon" property="icon"/>
         <result column="hidden" property="hidden"/>
+        <result column="status" property="status"/>
     </resultMap>
 
     <select id="getMenuListByAdminId" resultType="com.echo.modules.ums.model.UmsMenu">

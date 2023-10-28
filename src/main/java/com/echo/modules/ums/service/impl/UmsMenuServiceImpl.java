@@ -1,6 +1,8 @@
 package com.echo.modules.ums.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.echo.config.api.Result;
@@ -10,6 +12,7 @@ import com.echo.modules.ums.mapper.UmsMenuMapper;
 import com.echo.modules.ums.service.UmsMenuService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static com.echo.common.constant.CommonConstant.ONE;
 import static com.echo.common.constant.CommonConstant.ZERO;
-import static com.echo.config.api.ResultCode.THE_MENU_QUERY_FAILED;
+import static com.echo.config.api.ResultCode.*;
 
 /**
  * <p>
@@ -31,10 +34,14 @@ import static com.echo.config.api.ResultCode.THE_MENU_QUERY_FAILED;
 @Service
 public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> implements UmsMenuService {
 
+    @Autowired
+    private UmsMenuMapper umsMenuMapper;
+
+
     /**
      * 类路径：com.echo.modules.ums.service.impl
      * 类名称：UmsMenuServiceImpl
-     * 方法名称：createMenu
+     * 方法名称：addMenu
      * 方法描述：{ 创建菜单 }
      * param：[umsMenu]
      * return：com.echo.config.api.Result<java.lang.Object>
@@ -43,8 +50,11 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      * version：1.0
      */
     @Override
-    public Result createMenu(UmsMenu umsMenu) {
+    public Result addMenu(UmsMenu umsMenu) {
         umsMenu.setCreateTime(new Date());
+        if (umsMenu.getStatus().equals(ONE)) {
+            umsMenu.setStatus(ZERO);
+        }
         updateLevel(umsMenu);
         return save(umsMenu) ? Result.success() : Result.failed();
     }
@@ -61,10 +71,53 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      * version：1.0
      */
     @Override
-    public Result updateMenu(Long id, UmsMenu umsMenu) {
-        umsMenu.setId(id);
+    public Result updateMenu(UmsMenu umsMenu) {
+        if (umsMenu.getStatus().equals(ONE)) {
+            umsMenu.setStatus(ZERO);
+        }
         updateLevel(umsMenu);
         return updateById(umsMenu) ? Result.success() : Result.failed();
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsMenuServiceImpl
+     * 方法名称：getMenuById
+     * 方法描述：{ 根据ID获取菜单详情 }
+     * param：[menuId]
+     * return：com.echo.config.api.Result<com.echo.modules.ums.model.UmsMenu>
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 11:01
+     * version：1.0
+     */
+    @Override
+    public Result<UmsMenu> getMenuById(Long menuId) {
+        UmsMenu umsMenu = getOne(new LambdaQueryWrapper<UmsMenu>().eq(UmsMenu::getId, menuId).eq(UmsMenu::getStatus, ZERO));
+        if (ObjectUtil.isEmpty(umsMenu)) {
+            return Result.failed(THE_MENU_QUERY_FAILED);
+        }
+        return Result.success(umsMenu);
+    }
+
+    /**
+     * 类路径：com.echo.modules.ums.service.impl
+     * 类名称：UmsMenuServiceImpl
+     * 方法名称：delMenu
+     * 方法描述：{ 根据ID删除菜单 }
+     * param：[menuId]
+     * return：com.echo.config.api.Result
+     * 创建人：@author Echo
+     * 创建时间：2023/10/28 11:05
+     * version：1.0
+     */
+    @Override
+    public Result delMenu(Long menuId) {
+        UmsMenu umsMenu = getOne(new LambdaQueryWrapper<UmsMenu>().eq(UmsMenu::getId, menuId).eq(UmsMenu::getStatus, ZERO));
+        if (ObjectUtil.isEmpty(umsMenu)) {
+            return Result.failed(THE_MENU_QUERY_FAILED);
+        }
+        umsMenu.setStatus(ONE);
+        return updateById(umsMenu) ? Result.success() : Result.failed(THE_MENU_DELETE_FAILED);
     }
 
     /**
@@ -83,6 +136,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
         Page<UmsMenu> page = new Page<>(pageNum, pageSize);
         QueryWrapper<UmsMenu> wrapper = new QueryWrapper<>();
         wrapper.lambda().eq(UmsMenu::getParentId, parentId)
+                .eq(UmsMenu::getStatus, ZERO)
                 .orderByDesc(UmsMenu::getSort);
         return Result.success(page(page, wrapper));
     }
@@ -100,7 +154,12 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      */
     @Override
     public Result<List<UmsMenuVO>> getTreesMenuList() {
-        List<UmsMenu> menuList = list();
+        List<UmsMenu> menuList = umsMenuMapper.selectList(new LambdaQueryWrapper<UmsMenu>()
+                .eq(UmsMenu::getStatus, ZERO)
+        );
+        if (CollectionUtil.isEmpty(menuList)) {
+            return Result.failed(THE_MENU_QUERY_FAILED);
+        }
         List<UmsMenuVO> result = menuList.stream()
                 .filter(menu -> menu.getParentId().equals(0L))
                 .map(menu -> covertMenuNode(menu, menuList)).collect(Collectors.toList());
@@ -119,11 +178,16 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      * version：1.0
      */
     @Override
-    public Result updateMenuHidden(Long id, Integer hidden) {
-        UmsMenu umsMenu = new UmsMenu();
-        umsMenu.setId(id);
-        umsMenu.setHidden(hidden);
-        return updateById(umsMenu) ? Result.success() : Result.failed();
+    public Result updateMenuHidden(Long menuId) {
+        UmsMenu umsMenu = getOne(new LambdaQueryWrapper<UmsMenu>()
+                .eq(UmsMenu::getStatus, ZERO)
+                .eq(UmsMenu::getId, menuId)
+        );
+        if (ObjectUtil.isEmpty(umsMenu)) {
+            return Result.failed(THE_MENU_QUERY_FAILED);
+        }
+        umsMenu.setHidden(ONE);
+        return updateById(umsMenu) ? Result.success() : Result.failed(THE_MENU_HIDDEN_FAILED);
     }
 
 

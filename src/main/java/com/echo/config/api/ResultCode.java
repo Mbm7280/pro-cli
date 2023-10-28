@@ -52,6 +52,9 @@ public enum ResultCode implements IErrorCode {
     THE_PASSWORD_UPDATE_FAILED(1014, "旧密码修改失败，请稍后重试！"),
 
     THE_ROLE_DELETE_FAILED(1015, "删除角色失败，请稍后重试！"),
+
+
+    THE_MENU_HIDDEN_FAILED(1016, "隐藏菜单失败，请稍后重试！"),
     ;
 
     private long code;

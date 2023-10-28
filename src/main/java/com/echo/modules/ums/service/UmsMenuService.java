@@ -21,12 +21,29 @@ public interface UmsMenuService extends IService<UmsMenu> {
     /**
      * 创建菜单
      */
-    Result createMenu(UmsMenu umsMenu);
+    Result addMenu(UmsMenu umsMenu);
 
     /**
      * 修改菜单
      */
-    Result updateMenu(Long id, UmsMenu umsMenu);
+    Result updateMenu(UmsMenu umsMenu);
+
+    /**
+     * 根据ID获取菜单详情
+     *
+     * @param menuId
+     * @return
+     */
+    Result<UmsMenu> getMenuById(Long menuId);
+
+
+    /**
+     * 根据ID删除菜单
+     *
+     * @param menuId
+     * @return
+     */
+    Result delMenu(Long menuId);
 
     /**
      * 分页查询菜单
@@ -41,7 +58,7 @@ public interface UmsMenuService extends IService<UmsMenu> {
     /**
      * 修改菜单显示状态
      */
-    Result updateMenuHidden(Long id, Integer hidden);
+    Result updateMenuHidden(Long menuId);
 
 
 }
