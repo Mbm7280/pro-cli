@@ -154,6 +154,7 @@ public class UmsMenuServiceImpl extends ServiceImpl<UmsMenuMapper, UmsMenu> impl
      */
     @Override
     public Result<List<UmsMenuVO>> getTreesMenuList() {
+
         List<UmsMenu> menuList = umsMenuMapper.selectList(new LambdaQueryWrapper<UmsMenu>()
                 .eq(UmsMenu::getStatus, ZERO)
         );
