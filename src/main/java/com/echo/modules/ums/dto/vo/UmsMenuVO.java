@@ -1,5 +1,6 @@
 package com.echo.modules.ums.dto.vo;
 
+import com.echo.modules.ums.model.UmsMenu;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UmsMenuVO {
+public class UmsMenuVO extends UmsMenu {
 
     /**
      * 子级菜单
